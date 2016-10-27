@@ -14,16 +14,36 @@
       <ul class="nav navbar-nav">
         <li class="active"><a href="#">Home</a></li>
         <li><a href="/login">Login</a></li>
-        <li><a href="/twitter">Local Register</a></li>
-        <li><a href="#">Twitter Register</a></li>
-        <li><a href="#">Facebook Register</a></li>
-        <li><a href="#">Github Register</a></li>
       </ul>
     </div>
   </nav>
 
   <div class="container">
-    <h1><%= title%></h1>
+    <h1>Home</h1>
+    <div class="col-sm-3">
+      <a href="/register">Local Register</a>
+    </div>
+
+    <div class="col-sm-3">
+      <div>Register with twitter</div>
+      <div>
+        <a href="/auth/twitter"><i class="fa fa-twitter-square fa-5x"></i></a>
+      </div>
+    </div>
+
+    <div class="col-sm-3">
+      <div>Register with Facebook</div>
+      <div>
+        <a href="/auth/facebook"><i class="fa fa-facebook-official fa-5x"></i></a>
+      </div>
+    </div>
+
+    <div class="col-sm-3">
+      <div>Register with Github</div>
+      <div>
+        <a href=""><i class="fa fa-github-square fa-5x"></i></a>
+      </div>
+    </div>
   </div>
 
 

@@ -8,19 +8,19 @@ var bodyParser = require('body-parser');
 
 var Profile = require('./models/profile')
 
-
-
 var mongoose = require('mongoose');
-
 mongoose.Promise = global.Promise
-
 mongoose.connect('mongodb://localhost/dharmadi')
+
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy
+var FacebookStrategy = require('passport-facebook').Strategy
 
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var auth = require('./routes/oauth');
 
 var app = express();
 
@@ -47,11 +47,55 @@ app.use(express.static(path.join(__dirname, 'public')));
 // bind model.auth to passport-local
 passport.use(new LocalStrategy(Profile.authenticate()))
 
+
+passport.use(new FacebookStrategy({
+      clientID: "1793981720842185",
+      clientSecret: "769279add4fb1ec29877a201bafcee43",
+      callbackURL: "http://localhost:3000/auth/facebook/callback"
+    },
+    function(accessToken, refreshToken, profile, done) {
+      Profile.findOneAndUpdate({
+        username: profile.username
+      }, {
+        name: profile.displayName,
+        username: profile.username,
+        email: profile.emails
+      }, {
+        upsert: true
+      }, function(err, user) {
+        if (err) { return done(err); }
+        done(null, user);
+      })
+    }
+))
+
+passport.use(new TwitterStrategy({
+      consumerKey: "f2IbQkzlofxSnJMo4BaZysZmO",
+      consumerSecret: "P6jy8eiGhlsvWjIiH70npR17uXC2DpzhxytDEYSc24gK4Ige00",
+      callbackURL: "http://localhost:3000/auth/twitter/callback"
+    },
+    function(token, tokenSecret, profile, done) {
+      Profile.findOneAndUpdate({
+        username: profile.username
+      }, {
+        name: profile.displayName,
+        username: profile.username,
+        email: profile.username + '@twitter.com'
+      }, {
+        upsert: true
+      }, function(err, user) {
+        if (err) { return done(err); }
+        done(null, user);
+      })
+    }
+))
+
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/auth', auth);
 
 passport.serializeUser(Profile.serializeUser())
 passport.deserializeUser(Profile.deserializeUser())
