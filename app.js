@@ -5,11 +5,11 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var mongoose = require('mongoose')                                        // TODO: Required for passport authentication
-var session = require('express-session')                                  // TODO: Required for passport authentication
-const passport = require('passport')                                      // TODO: Required for passport authentication
-const LocalStrategy = require('passport-local').Strategy                  // TODO: Required for passport authentication
-const FacebookStrategy  = require('passport-facebook').Strategy
+var mongoose = require('mongoose')
+var session = require('express-session')
+const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy
+const FacebookStrategy = require('passport-facebook').Strategy
 const GoogleStrategy = require('passport-google-oauth').Strategy
 
 var routes = require('./routes/index');
@@ -31,7 +31,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(methodOverride(function(req, res){
+app.use(methodOverride(function (req, res) {
   if (req.body && typeof req.body === 'object' && '_method' in req.body) {
     // look in urlencoded POST bodies and delete it
     var method = req.body._method
@@ -39,7 +39,7 @@ app.use(methodOverride(function(req, res){
     return method
   }
 }))
-app.use(session({                                                         // TODO: Required for passport authentication
+app.use(session({ // TODO: Required for passport authentication
   secret: 'secret',
   resave: false,
   saveUninitialized: false,
@@ -48,21 +48,21 @@ app.use(session({                                                         // TOD
   }
 }))
 
-app.use(passport.initialize())                                            // TODO: Required for passport authentication
-app.use(passport.session())                                               // TODO: Required for passport authentication
+app.use(passport.initialize()) // TODO: Required for passport authentication
+app.use(passport.session()) // TODO: Required for passport authentication
 
 
 app.use('/', routes);
 // app.use('/users', users);
 app.use('/api', api)
 
-passport.use(new LocalStrategy(user.authenticate()))                      // TODO: Required for passport authentication
+passport.use(new LocalStrategy(user.authenticate())) // TODO: Required for passport authentication
 passport.use(new FacebookStrategy({
     clientID: config.facebookAuth.facebook_api_key,
     clientSecret: config.facebookAuth.facebook_api_secret,
     callbackURL: 'http://localhost:3000/auth/facebook/callback'
   },
-  function(accessToken, tokenSecret, profile, cb) {
+  function (accessToken, tokenSecret, profile, cb) {
     console.log(profile);
     user.create({
       username: profile.displayName
@@ -76,14 +76,14 @@ passport.use(new GoogleStrategy({
 }))
 
 
-mongoose.Promise = global.Promise                                         // TODO: Required for passport authentication
+mongoose.Promise = global.Promise // TODO: Required for passport authentication
 mongoose.connect('mongodb://localhost:27017/passport')
 
-passport.serializeUser(user.serializeUser())                              // TODO: Required for passport authentication
-passport.deserializeUser(user.deserializeUser())                          // TODO: Required for passport authentication
+passport.serializeUser(user.serializeUser()) // TODO: Required for passport authentication
+passport.deserializeUser(user.deserializeUser()) // TODO: Required for passport authentication
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -94,18 +94,19 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
       error: err
-    });m
+    });
+    m
   });
 }
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
