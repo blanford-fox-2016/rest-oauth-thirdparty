@@ -1,22 +1,20 @@
-# rest-oauth-thirdparty
+# REST OAuth 3rd Party
 
-## Preparation of environment
+## Setup
 
-### 1. Installation of express
+```
+npm install -g bower
+npm install
+bower install
+```
 
-### 2. Installation of bower
-for dependencies of frontend things
-- make a new file named ```.bowerrc``` and set
+## Running
+
 ```
-{
-  "directory": "public/lib"
-}
+npm start
 ```
-- then
-```
-> bower i -S bootstrap
-```
-Overall diagrams tree looks like this
+
+## Project Structure
 
 ```
 ├── README.md
