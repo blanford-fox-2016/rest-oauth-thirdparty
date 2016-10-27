@@ -4,10 +4,51 @@
 <% include head.ejs %>
 
 <body>
-<h1><%= title %></h1>
-<p>Welcome to <%= title %></p>
 
-<a href="">Twitter</a>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+
+            <h1 class="text-center">TITLE</h1>
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Profile</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class=" col-sm-6 col-sm-offset-3 ">
+                            <table class="table table-user-information">
+                                <tbody>
+                                <tr>
+                                    <td>Username:</td>
+                                    <td><%= profile.username%></td>
+                                </tr>
+                                <tr>
+                                    <td>Name:</td>
+                                    <td><%= profile.name%></td>
+                                </tr>
+                                <tr>
+                                    <td>email</td>
+                                    <td><%= profile.email%></td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+
+                            <a href="#" class="btn btn-primary">My Sales Performance</a>
+                            <a href="#" class="btn btn-primary">Team Sales Performance</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 
 
 <% include scripts.ejs %>

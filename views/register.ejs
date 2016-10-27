@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<% include head.ejs %>
+
+<body>
+
+
+<div class="login-page">
+    <div class="container-fluid container-table">
+        <div class="row vertical-center-row">
+            <div class="col-sm-12">
+                <div class="form">
+                    <form class="register-form" action="/register" method="post">
+                        <div class="form-group-lg">
+                            <input type="text" class="form-control" name="name" placeholder="name"/>
+                        </div>
+                        <div class="form-group-lg">
+                            <input type="text" class="form-control" name="username" placeholder="username"/>
+                        </div>
+                        <div class="form-group-lg">
+                            <input type="password" class="form-control" name="password" placeholder="pasword"/>
+                        </div>
+                        <div class="form-group-lg">
+                            <input type="email" class="form-control" name="email" placeholder="email"/>
+                        </div>
+                        <button class="btn btn-success text-uppercase">create</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<% include scripts.ejs %>
+</body>
+</html>
