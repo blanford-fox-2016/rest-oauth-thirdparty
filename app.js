@@ -52,69 +52,75 @@ passport.use(new LocalStrategy(Profile.authenticate()))
 
 
 passport.use(new GoogleStrategy({
-      clientID: config.googleAuth.clientId,
-      clientSecret: config.googleAuth.clientSecret,
-      callbackURL: config.googleAuth.callBackURL
-    },
-    function(accessToken, refreshToken, profile, done) {
-      Profile.findOneAndUpdate({
-        username: profile.username
-      }, {
-        name: profile.displayName,
-        username: profile.username,
-        email: profile.emails[0].value
-      }, {
-        upsert: true
-      }, function(err, user) {
-        if (err) { return done(err); }
-        done(null, user);
-      })
-    }
+    clientID: config.googleAuth.clientId,
+    clientSecret: config.googleAuth.clientSecret,
+    callbackURL: config.googleAuth.callBackURL
+  },
+  function (accessToken, refreshToken, profile, done) {
+    Profile.findOneAndUpdate({
+      username: profile.username
+    }, {
+      name: profile.displayName,
+      username: profile.username,
+      email: profile.emails[0].value
+    }, {
+      upsert: true
+    }, function (err, user) {
+      if (err) {
+        return done(err);
+      }
+      done(null, user);
+    })
+  }
 ))
 
 passport.use(new FacebookStrategy({
-        clientID: config.facebookAuth.appId,
-        clientSecret: config.facebookAuth.appSecret,
-        callbackURL: config.facebookAuth.callBackURL,
-        profileFields: ['id', 'displayName', 'photos', 'email'],
-        passReqToCallback: true
-    },
-    function(req, accessToken, refreshToken, profile, done) {
-        console.log(profile)
-      Profile.findOneAndUpdate({
-        username: profile.username
-      }, {
-        name: profile.displayName,
-        username: profile.username,
-        email: profile.displayName
-      }, {
-        upsert: true
-      }, function(err, user) {
-        if (err) { return done(err); }
-        done(null, user);
-      })
-    }
+    clientID: config.facebookAuth.appId,
+    clientSecret: config.facebookAuth.appSecret,
+    callbackURL: config.facebookAuth.callBackURL,
+    profileFields: ['id', 'displayName', 'photos', 'email'],
+    passReqToCallback: true
+  },
+  function (req, accessToken, refreshToken, profile, done) {
+    console.log(profile)
+    Profile.findOneAndUpdate({
+      email: profile.emails[0].value
+    }, {
+      name: profile.displayName,
+      username: profile.displayName.toLowerCase().trim(),
+      email: profile.emails[0].value
+    }, {
+      upsert: true
+    }, function (err, user) {
+      if (err) {
+        return done(err);
+      }
+      done(null, user);
+    })
+  }
 ))
 
 passport.use(new TwitterStrategy({
-      consumerKey: config.twitterAuth.consumerKey,
-      consumerSecret: config.twitterAuth.consumerSecret,
-      callbackURL: config.twitterAuth.callBackURL
-    },
-    function(token, tokenSecret, profile, done) {
-      Profile.findOneAndUpdate({
-        username: profile.username
-      }, {
-        name: profile.displayName,
-        username: profile.username,
-        email: profile.username + '@twitter.com'
-      }, {
-        upsert: true
-      }, function(err, user) {
-        if (err) { return done(err); }
-        done(null, user);
-      })
-    }
+    consumerKey: config.twitterAuth.consumerKey,
+    consumerSecret: config.twitterAuth.consumerSecret,
+    callbackURL: config.twitterAuth.callBackURL
+  },
+  function (token, tokenSecret, profile, done) {
+    Profile.findOneAndUpdate({
+      username: profile.username
+    }, {
+      name: profile.displayName,
+      username: profile.username,
+      email: profile.username + '@twitter.com'
+    }, {
+      upsert: true
+    }, function (err, user) {
+      if (err) {
+        return done(err);
+      }
+      done(null, user);
+    })
+  }
 ))
 
 app.use(passport.initialize());
@@ -128,7 +134,7 @@ passport.serializeUser(Profile.serializeUser())
 passport.deserializeUser(Profile.deserializeUser())
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -139,7 +145,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
@@ -150,7 +156,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
