@@ -73,17 +73,20 @@ passport.use(new GoogleStrategy({
 ))
 
 passport.use(new FacebookStrategy({
-      clientID: config.facebookAuth.appId,
-      clientSecret: config.facebookAuth.appSecret,
-      callbackURL: config.facebookAuth.callBackURL
+        clientID: config.facebookAuth.appId,
+        clientSecret: config.facebookAuth.appSecret,
+        callbackURL: config.facebookAuth.callBackURL,
+        profileFields: ['id', 'displayName', 'photos', 'email'],
+        passReqToCallback: true
     },
-    function(accessToken, refreshToken, profile, done) {
+    function(req, accessToken, refreshToken, profile, done) {
+        console.log(profile)
       Profile.findOneAndUpdate({
         username: profile.username
       }, {
         name: profile.displayName,
         username: profile.username,
-        email: profile.emails[0].value
+        email: profile.displayName
       }, {
         upsert: true
       }, function(err, user) {
