@@ -1,0 +1,34 @@
+extends layout
+block content
+  .container-fluid
+    .jumbotron
+      nav.navbar.navbar-inverse
+        .container-fluid
+          .navbar-header
+            a.navbar-brand(href='/home') Ex-Passport
+          ul.nav.navbar-nav
+            li
+              a(href='/home') Home
+            li
+              a(href='/register') Register
+            li
+              a(href='/login') Sign In
+            li.active
+              a(href='/list') All Member
+      .container
+        h1= 'All Data'
+        each key in data
+          .panel.panel-danger
+            .panel-heading
+              p #{key.username}
+            .panel-body
+              p Email: #{key.email}
+              -if (key.image)
+                p Image Url: #{key.image}
+
+              a.pull-left.btn.btn-info(href='/update/#{key._id}', role='button') Update
+              form.pull-right(method='POST' action='/delete/#{key._id}')
+                .form-group
+                  input(type='hidden' name='_method' value='delete')
+                  button.btn.btn-success(type='submit') Delete
+              .clearfix

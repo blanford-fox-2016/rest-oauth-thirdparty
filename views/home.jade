@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  .container-fluid
+    .jumbotron
+      nav.navbar.navbar-inverse
+        .container-fluid
+          .navbar-header
+            a.navbar-brand(href='/home') Ex-Passport
+          ul.nav.navbar-nav
+            li.active
+              a(href='/home') Home
+            li
+              a(href='/register') Register
+            li
+              a(href='/login') Sign In
+            li
+              a(href='/list') All Member
+
+      .container
+        h1= 'Welcome to home'
+        p Register yourself
+        a.btn.btn-primary(href='/register', role='button') Register now !
