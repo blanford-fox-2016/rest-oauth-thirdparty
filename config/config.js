@@ -8,8 +8,8 @@ module.exports = {
   },
 
   'facebookAuth': {
-    'appId': '1662196534110289',
-    'appSecret': '11ca86debba31600bc5f9e330d3eae53',
+    'appId': '1793981720842185',
+    'appSecret': '769279add4fb1ec29877a201bafcee43',
     'callBackURL': 'http://localhost:3000/auth/facebook/callback'
   },
 
