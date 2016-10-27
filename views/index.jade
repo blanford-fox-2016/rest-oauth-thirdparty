@@ -1,0 +1,48 @@
+extends layout
+
+block content
+  .container
+    .row
+      .jumbotron.text-center
+        h1 REST OAUTH 3rd-Party
+        p by : Septian Adhi Tama (tamatamvan)
+      ul.nav.nav-tabs
+        li.active
+          a(href='#register', data-toggle='tab', aria-expanded='true') Register
+        li
+          a(href='#signin', data-toggle='tab', aria-expanded='false') Sign In
+      - if(alert)
+        .alert.alert-dismissible.alert-success
+          button.close(type='button' data-dismiss='alert')&times;
+          p= alert
+
+      #myTabContent.tab-content
+        #register.tab-pane.fade.active.in
+          br
+          form(method='post' action='/users/register')
+            .form-group
+              label.control-label(for='name') Name
+              input.form-control#name(type='text' name='name' placeholder='Enter your fullname' required)
+            .form-group
+              label.control-label(for='email') Name
+              input.form-control#email(type='email' name='email' placeholder='Enter your email' required)
+            .form-group
+              label.control-label(for='username') Username
+              input.form-control#username(type='text' name='username' placeholder='Enter your username' required)
+            .form-group
+              label.control-label(for='password') Password
+              input.form-control#password(type='password' name='password' placeholder='Enter your password' required)
+            .form-group
+              button.btn.btn-primary(type='submit') Submit
+        
+        #signin.tab-pane.fade
+          br
+          form(method='post' action='/users/login')
+            .form-group
+              label.control-label(for='username') Username
+              input.form-control#username(type='text' placeholder='Enter your username' required)
+            .form-group
+              label.control-label(for='password') Password
+              input.form-control#password(type='password' placeholder='Enter your password' required)
+            .form-group
+              button.btn.btn-primary(type='submit') Submit
