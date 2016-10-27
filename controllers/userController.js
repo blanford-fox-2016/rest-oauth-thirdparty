@@ -26,19 +26,40 @@ let register = (req, res, next) => {
       // res.render('index', { alert: 'Congrats! Your regisration was successfull!', data: req.session});
 
       passport.authenticate('local')(req, res, function () {
-        res.render('profile');
+        req.session.save((err, next) => {
+          if (err) {
+            return next(err);
+          } else {
+            res.redirect('/users/profile');
+          }
+        })
       });
-
     }
   })
 }
 
 let login = (req, res, next) => {
-    res.redirect('/users/profile');
+  req.session.save((err, next) => {
+    if (err) {
+      return next(err);
+    } else {
+      res.redirect('/users/profile');
+    }
+  })
+}
+
+let logout = (req, res, next) => {
+  req.logout();
+  res.redirect('/');
 }
 
 let profile = (req, res, next) => {
-    res.render('profile');
+  if (req.session.passport && req.session.passport.user != undefined) {
+    res.render('profile', {data: req.session});
+  } else {
+    res.redirect('/')
+  }
+
 }
 
 let edit = (req, res, next) => {
@@ -78,5 +99,6 @@ module.exports = {
   edit: edit,
   destroy: destroy,
   login: login,
+  logout: logout,
   profile: profile
 }

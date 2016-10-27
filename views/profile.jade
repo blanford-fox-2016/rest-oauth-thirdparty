@@ -3,4 +3,5 @@ block content
   .container
     .row
       .jumbotron.text-center
-        h1 Hallo 
+        h1 Hallo #{data.passport.user}
+        p= JSON.stringify(data)
