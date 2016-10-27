@@ -11,7 +11,7 @@ const session = require('express-session')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const FacebookStrategy = require('passport-facebook').Strategy
-const GoogleStrategy = require('passport-google-oauth').Strategy
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 
 const routes = require('./routes/index')
 const api = require('./routes/api')
@@ -69,26 +69,38 @@ passport.use(new FacebookStrategy({
     callbackURL: 'http://localhost:3000/auth/facebook/callback'
   },
   function (accessToken, tokenSecret, profile, cb) {
-    console.log(profile)
+    console.log("FACEBOOK:", profile)
     user.create({
-      username: profile.displayName
+      username: profile.displayName.toLowerCase().trim()
     })
     return cb(null, profile)
   }))
 
 // GOOGLE
 passport.use(new GoogleStrategy({
-  consumerKey: config.googleAuth.web.client_id,
-  consumerSecret: config.googleAuth.web.client_secret,
-  callbackURL: config.googleAuth.web.redirect_uris
+  clientID: config.googleAuth.web.client_id,
+  clientSecret: config.googleAuth.web.client_secret,
+  callbackURL: 'http://localhost:3000/auth/google/callback'
+}, function (req, accessToken, refreshToken, profile, done) {
+  console.log("GOOGLE:", profile)
+  user.create({
+    email: profile.emails[0].value
+  }, {
+    username: profile.displayName.toLowerCase().trim(),
+    email: profile.emails[0].value
+  }, {
+    upsert: true
+  })
+  done
 }))
 
-
-mongoose.Promise = global.Promise // TODO: Required for passport authentication
+// MONGODB AND MONGOOSE
+mongoose.Promise = global.Promise
 mongoose.connect('mongodb://localhost:27017/passport')
 
-passport.serializeUser(user.serializeUser()) // TODO: Required for passport authentication
-passport.deserializeUser(user.deserializeUser()) // TODO: Required for passport authentication
+// BIND PASSPORT WITH USER MODEL (PASSPORT-LOCAL-MONGOOSE)
+passport.serializeUser(user.serializeUser())
+passport.deserializeUser(user.deserializeUser())
 
 // -----------------------------------------------------------------------------
 // MISC CONFIGURATION
@@ -125,6 +137,5 @@ app.use(function (err, req, res, next) {
     error: {}
   })
 })
-
 
 module.exports = app
