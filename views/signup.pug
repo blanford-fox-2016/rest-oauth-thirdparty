@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  #screen
+    .signup-container
+      form(action='/signup/add', method='post')
+        input(type='text', placeholder='name', name="name")
+        input(type='text', placeholder='username', name="username")
+        input(type='email', placeholder='email', name="email")
+        input(type='password', placeholder='password', name="password")
+        button(type='submit') Sign Up

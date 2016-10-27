@@ -1,0 +1,70 @@
+input, button {
+  background:rgba(50,50,50,0.25);
+  -webkit-backdrop-filter:blur(6px);
+  padding:12px 12px;
+  font-size:20px;
+  color:#333;
+  z-index:1000;
+  display:inline-block;
+  height:40px;
+  width:300px;
+  border-radius:6px;
+  color:#f9f9f9;
+  -webkit-transition:0.6s ease;
+  border:none;
+  outline:none;
+  margin:20px 0 0;
+}
+
+input:hover, button:hover {
+  -webkit-backdrop-filter:blur(15px);
+}
+
+input:selected, button:active {
+  outline:none;
+  -webkit-backdrop-filter:blur(15px);
+  background:rgba(130,200,130,0.55);
+}
+
+::-webkit-input-placeholder {
+   color: white;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   color: white;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   color: white;
+}
+
+:-ms-input-placeholder {
+   color: red;
+}
+
+button:hover {
+  cursor:pointer;
+}
+
+button {
+  background:rgba(0,0,0,0.55);
+  width:300px;
+  height:60px;
+}
+
+.signup-container {
+  display:block;
+  margin:5% auto;
+  height:300px;
+  width:300px;
+}
+
+#screen {
+  position:relative;
+  display:block;
+}
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;  background:url("https://source.unsplash.com/Q47eNv_UvfM/1280x900");
+  background-size:cover;
+}
