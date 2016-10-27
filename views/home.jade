@@ -34,7 +34,14 @@ block content
       .jumbotron
         .container
           p You're not Signed in or Registered
-          a.btn.btn-primary(href='/register', role='button') Register now !
-          span
-            p or
-            a.btn.btn-success(href='/login', role='button') Sign In
+          form
+            .form-group
+              a.btn.btn-warning(href='/register', role='button') Register now !
+            .form-group
+              a.btn.btn-success(href='/login', role='button') Sign In
+            .form-group
+              a.btn.btn-info(href='/', role='button') Twitter Sign In
+            .form-group
+              a.btn.btn-primary(href='/auth/facebook', role='button') Facebook Sign In
+            .form-group
+              a.btn.btn-default(href='/auth/google', role='button') Google Sign In

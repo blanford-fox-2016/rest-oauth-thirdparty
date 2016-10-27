@@ -9,6 +9,8 @@ var mongoose = require('mongoose')                                        // TOD
 var session = require('express-session')                                  // TODO: Required for passport authentication
 const passport = require('passport')                                      // TODO: Required for passport authentication
 const LocalStrategy = require('passport-local').Strategy                  // TODO: Required for passport authentication
+const FacebookStrategy  = require('passport-facebook').Strategy
+const GoogleStrategy = require('passport-google-oauth').Strategy
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -16,6 +18,7 @@ var api = require('./routes/api')
 var methodOverride = require('method-override')
 var user = require('./models/user')
 var app = express();
+var config = require('./config/config.js')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -54,6 +57,24 @@ app.use('/', routes);
 app.use('/api', api)
 
 passport.use(new LocalStrategy(user.authenticate()))                      // TODO: Required for passport authentication
+passport.use(new FacebookStrategy({
+    clientID: config.facebookAuth.facebook_api_key,
+    clientSecret: config.facebookAuth.facebook_api_secret,
+    callbackURL: 'http://localhost:3000/auth/facebook/callback'
+  },
+  function(accessToken, tokenSecret, profile, cb) {
+    console.log(profile);
+    user.create({
+      username: profile.displayName
+    })
+    return cb(null, profile);
+  }));
+passport.use(new GoogleStrategy({
+  consumerKey: config.googleAuth.web.client_id,
+  consumerSecret: config.googleAuth.web.client_secret,
+  callbackURL: config.googleAuth.web.redirect_uris
+}))
+
 
 mongoose.Promise = global.Promise                                         // TODO: Required for passport authentication
 mongoose.connect('mongodb://localhost:27017/passport')
