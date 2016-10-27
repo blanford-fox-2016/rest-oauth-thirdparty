@@ -26,7 +26,7 @@ let register = (req, res, next) => {
       // res.render('index', { alert: 'Congrats! Your regisration was successfull!', data: req.session});
 
       passport.authenticate('local')(req, res, function () {
-            res.render('profile');
+        res.render('profile');
       });
 
     }
@@ -34,7 +34,11 @@ let register = (req, res, next) => {
 }
 
 let login = (req, res, next) => {
-  res.render('profile');
+    res.redirect('/users/profile');
+}
+
+let profile = (req, res, next) => {
+    res.render('profile');
 }
 
 let edit = (req, res, next) => {
@@ -73,5 +77,6 @@ module.exports = {
   register: register,
   edit: edit,
   destroy: destroy,
-  login: login
+  login: login,
+  profile: profile
 }

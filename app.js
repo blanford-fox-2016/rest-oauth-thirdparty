@@ -5,9 +5,8 @@ let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 
-let User = require('./models/User')
-let session = require('express-session');
 let mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/rest-oauth', (err) => {
   if (err) {
     console.log(err);
@@ -16,17 +15,17 @@ mongoose.connect('mongodb://localhost/rest-oauth', (err) => {
   }
 });
 
+let session = require('express-session');
 let passport = require('passport');
 let LocalStrategy = require('passport-local').Strategy;
 
+let User = require('./models/User')
 passport.use(new LocalStrategy(User.authenticate()));
 
 let routes = require('./routes/index');
 let users = require('./routes/users');
 let app = express();
 
-app.use(passport.initialize());
-app.use(passport.session());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -39,8 +38,23 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: false
+}))
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 app.use('/', routes);
 app.use('/users', users);
+
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

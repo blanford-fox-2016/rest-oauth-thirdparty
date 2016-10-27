@@ -40,9 +40,9 @@ block content
           form(method='post' action='/users/login')
             .form-group
               label.control-label(for='username') Username
-              input.form-control#username(type='text' placeholder='Enter your username' required)
+              input.form-control#username(type='text' name='username' placeholder='Enter your username' required)
             .form-group
               label.control-label(for='password') Password
-              input.form-control#password(type='password' placeholder='Enter your password' required)
+              input.form-control#password(type='password' name='password' placeholder='Enter your password' required)
             .form-group
               button.btn.btn-primary(type='submit') Submit
