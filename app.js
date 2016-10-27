@@ -87,7 +87,7 @@ passport.use(new FacebookStrategy({
       email: profile.emails[0].value
     }, {
       name: profile.displayName,
-      username: profile.displayName.toLowerCase().replace(/\s+/g, '')
+      username: profile.displayName.toLowerCase().replace(/\s+/g, ''),
       email: profile.emails[0].value
     }, {
       upsert: true
