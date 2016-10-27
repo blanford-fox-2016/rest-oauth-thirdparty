@@ -5,10 +5,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var mongoose = require('mongoose')
-var session = require('express-session')
-const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy
+var mongoose = require('mongoose')                                        // TODO: Required for passport authentication
+var session = require('express-session')                                  // TODO: Required for passport authentication
+const passport = require('passport')                                      // TODO: Required for passport authentication
+const LocalStrategy = require('passport-local').Strategy                  // TODO: Required for passport authentication
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -36,27 +36,30 @@ app.use(methodOverride(function(req, res){
     return method
   }
 }))
-app.use(session({
+app.use(session({                                                         // TODO: Required for passport authentication
   secret: 'secret',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 60000
+  }
 }))
 
-app.use(passport.initialize())
-app.use(passport.session())
+app.use(passport.initialize())                                            // TODO: Required for passport authentication
+app.use(passport.session())                                               // TODO: Required for passport authentication
 
 
 app.use('/', routes);
 // app.use('/users', users);
 app.use('/api', api)
 
-passport.use(new LocalStrategy(user.authenticate()))
+passport.use(new LocalStrategy(user.authenticate()))                      // TODO: Required for passport authentication
 
-mongoose.Promise = global.Promise
+mongoose.Promise = global.Promise                                         // TODO: Required for passport authentication
 mongoose.connect('mongodb://localhost:27017/passport')
 
-passport.serializeUser(user.serializeUser())
-passport.deserializeUser(user.deserializeUser())
+passport.serializeUser(user.serializeUser())                              // TODO: Required for passport authentication
+passport.deserializeUser(user.deserializeUser())                          // TODO: Required for passport authentication
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

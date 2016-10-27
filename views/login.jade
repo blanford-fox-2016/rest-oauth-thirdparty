@@ -10,12 +10,18 @@ block content
           ul.nav.navbar-nav
             li
               a(href='/home') Home
+              -if(!user)
+                li
+                  a(href='/register') Register
+                li.active
+                  a(href='/login') Sign In
+              -else
+                li
+                  a(href='/list') All Member
+        -if(user)
+          ul.nav.navbar-nav.navbar-right
             li
-              a(href='/register') Register
-            li.active
-              a(href='/login') Sign In
-            li
-              a(href='/list') All Member
+              a(href='/logout' type='button') Logout
       .container
         h1= title
         p Please login to explore more

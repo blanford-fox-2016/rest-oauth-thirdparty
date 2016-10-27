@@ -9,12 +9,16 @@ block content
           ul.nav.navbar-nav
             li
               a(href='/home') Home
+          -if(!user)
             li
               a(href='/register') Register
             li
               a(href='/login') Sign In
             li.active
               a(href='/list') All Member
+          ul.nav.navbar-nav.navbar-right
+            li
+              a(href='/logout' type='button') Logout
       .container
         h1= 'All Data'
         each key in data
