@@ -5,18 +5,7 @@
 
   <body>
 
-
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#">WebSiteName</a>
-      </div>
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="/login">Login</a></li>
-      </ul>
-    </div>
-  </nav>
+  <% include top_menu.ejs %>
 
   <div class="container">
     <h1>Home</h1>
@@ -39,11 +28,12 @@
     </div>
 
     <div class="col-sm-3">
-      <div>Register with Github</div>
+      <div>Register with Google</div>
       <div>
-        <a href=""><i class="fa fa-github-square fa-5x"></i></a>
+        <a href="/auth/google"><i class="fa fa-google-plus-square fa-5x"></i></a>
       </div>
     </div>
+
   </div>
 
 

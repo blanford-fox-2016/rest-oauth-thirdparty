@@ -3,7 +3,7 @@ var Profile = require('../models/profile')
 
 
 function viewHome (req, res) {
-    res.render('index', {title: "Home"})
+    res.render('index', {title: "Home", profile:req.user})
 }
 
 function viewLogin (req, res) {
@@ -55,8 +55,13 @@ function isLogin (req, res, next) {
 }
 
 function getProfile (req, res) {
-        res.render('profile', {profile:req.user})
+    res.render('profile', {profile:req.user})
 
+}
+
+function logout (req, res) {
+    req.session.destroy()
+    res.redirect('/')
 }
 
 module.exports = {
@@ -67,5 +72,6 @@ module.exports = {
     getProfile: getProfile,
     localLogin: localLogin,
     isAuthenticate: isAuthenticate,
-    isLogin: isLogin
+    isLogin: isLogin,
+    logout: logout
 }

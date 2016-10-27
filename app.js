@@ -16,11 +16,14 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy
 var FacebookStrategy = require('passport-facebook').Strategy
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var auth = require('./routes/oauth');
+
+var config = require('./config/config')
 
 var app = express();
 
@@ -48,10 +51,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 passport.use(new LocalStrategy(Profile.authenticate()))
 
 
-passport.use(new FacebookStrategy({
-      clientID: "1793981720842185",
-      clientSecret: "769279add4fb1ec29877a201bafcee43",
-      callbackURL: "http://localhost:3000/auth/facebook/callback"
+passport.use(new GoogleStrategy({
+      clientID: config.googleAuth.clientId,
+      clientSecret: config.googleAuth.clientSecret,
+      callbackURL: config.googleAuth.callBackURL
     },
     function(accessToken, refreshToken, profile, done) {
       Profile.findOneAndUpdate({
@@ -59,7 +62,28 @@ passport.use(new FacebookStrategy({
       }, {
         name: profile.displayName,
         username: profile.username,
-        email: profile.emails
+        email: profile.emails[0].value
+      }, {
+        upsert: true
+      }, function(err, user) {
+        if (err) { return done(err); }
+        done(null, user);
+      })
+    }
+))
+
+passport.use(new FacebookStrategy({
+      clientID: config.facebookAuth.appId,
+      clientSecret: config.facebookAuth.appSecret,
+      callbackURL: config.facebookAuth.callBackURL
+    },
+    function(accessToken, refreshToken, profile, done) {
+      Profile.findOneAndUpdate({
+        username: profile.username
+      }, {
+        name: profile.displayName,
+        username: profile.username,
+        email: profile.emails[0].value
       }, {
         upsert: true
       }, function(err, user) {
@@ -70,9 +94,9 @@ passport.use(new FacebookStrategy({
 ))
 
 passport.use(new TwitterStrategy({
-      consumerKey: "f2IbQkzlofxSnJMo4BaZysZmO",
-      consumerSecret: "P6jy8eiGhlsvWjIiH70npR17uXC2DpzhxytDEYSc24gK4Ige00",
-      callbackURL: "http://localhost:3000/auth/twitter/callback"
+      consumerKey: config.twitterAuth.consumerKey,
+      consumerSecret: config.twitterAuth.consumerSecret,
+      callbackURL: config.twitterAuth.callBackURL
     },
     function(token, tokenSecret, profile, done) {
       Profile.findOneAndUpdate({
