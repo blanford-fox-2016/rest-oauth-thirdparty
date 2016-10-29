@@ -10,6 +10,9 @@ var path = require('path');
 // instance the express via app
 let app = express();
 
+//config
+const config = require('./config/config.json')
+
 // Auth
 const passport = require('passport');
 const LocalStrategy   = require('passport-local').Strategy;
@@ -36,7 +39,6 @@ const routesDashboard = require('./routes/dashboard');
 // set the port
 let port = process.env.PORT || 3000;
 
-
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
@@ -62,18 +64,30 @@ app.use(passport.session())
 
 passport.use(new LocalStrategy(User.authenticate()));
 
+/*
+passport.use(new FacebookStrategy({
+    clientID: process.env.FACEBOOK_APP_ID,
+    clientSecret: process.env.FACEBOOK_APP_SECRET,
+    callbackURL: process.env.FACEBOOK_CALLBACK,
+    profileFields: ['id', 'displayName', 'photos', 'email'],
+    passReqToCallback: true
+  }, function (req, accessToken, refreshToken, profile, done)
+*/
+
 passport.use(new facebook({
-  clientID: "259582084439610",
-  clientSecret: "414d2bbc0df52ba0c52846223c6ede46",
-  callbackURL: 'http://localhost:3000/auth/facebook/callback'
+  clientID: config.facebook.clientID,
+  clientSecret: config.facebook.clientSecret,
+  callbackURL: config.facebook.callbackURL,
+  profileFields: ['id', 'displayName', 'photos', 'email'],
+  passReqToCallback: true
 },
-function(accessToken, refreshToken, profile, cb) {
-  console.log(profile);
+function(req, accessToken, refreshToken, profile, done) {
+  // console.log(profile);
   User.create({
     name: profile.displayName
   })
 
-  return cb(null, profile);
+  return done(null, profile);
 }));
 
 passport.serializeUser(function(user, cb) {
@@ -89,13 +103,13 @@ passport.deserializeUser(function(obj, cb) {
 // -----------------------------------------------------
 
 passport.use(new twitter({
-    consumerKey: "R2dWdhEjaUxtZq0znY52G1Hcb",
-    consumerSecret: "rbbPZ1G6R61JotvOwlW86QI8E5LwU2RHRJsRDh9lvOF3al8BTj",
-    callbackURL: 'http://localhost:3000/auth/twitter/callback'
-  },
-  function(accessToken, refreshToken, profile, cb) {
-    return cb(null, profile);
-  }));
+  consumerKey: config.twitter.consumerKey,
+  consumerSecret: config.twitter.consumerSecret,
+  callbackURL: config.twitter.callbackURL
+},
+function(accessToken, refreshToken, profile, cb) {
+  return cb(null, profile);
+}));
 
 passport.serializeUser(function(user, cb) {
   cb(null, user);
@@ -115,7 +129,6 @@ app.use('/auth', routesAuth)
 app.use('/login', routesLogin)
 app.use('/logout', routesLogout)
 app.use('/dashboard', routesDashboard)
-
 
 app.listen(port, () => {
   console.log('the server is running on port ', port);

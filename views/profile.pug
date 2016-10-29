@@ -4,5 +4,10 @@
 //- if user.email
   //- p email : #{user.emails[0].value}
 p Halaman Dashboard
-
+if userFacebook
+  img(src="#{userFacebook._json.picture.data.url}" style="height: 50px")
+  p Display Name Facebook : #{userFacebook.displayName}
+  p #{userFacebook._json.name}
+  p Link url :
+    a(href="#{userFacebook._json.picture.data.url}" target="_blank") #{userFacebook._json.picture.data.url}
 a(href="/Logout") Log Out
