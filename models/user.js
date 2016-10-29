@@ -15,7 +15,8 @@ let User = new Schema({
     type      : String,
     trim      : true
   },
-  provider    : String
+  provider    : String,
+  email       : String
 });
 
 User.plugin(passportLocalMongoose)

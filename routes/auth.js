@@ -17,6 +17,14 @@ routesAuth.get('/facebook',
     scope: ['email']
   }))
 
+routesAuth.get('/twitter', passport.authenticate('twitter'));
+
+routesAuth.get('/google',
+  passport.authenticate('google', {
+    scope: ['profile', 'email']
+  }))
+
+
 routesAuth.get('/facebook/callback',
   passport.authenticate('facebook', {
     successRedirect: '/dashboard',
@@ -28,5 +36,12 @@ routesAuth.get('/twitter/callback',
   passport.authenticate('twitter', { failureRedirect: '/login' }),
   controller.processLogin);
 
+routesAuth.get('/google/callback',
+  passport.authenticate('google', {
+    successRedirect: '/dashboard',
+    failureRedirect: '/login',
+    failureFlash: true
+  })
+)
 
 module.exports = routesAuth

@@ -1,13 +1,11 @@
-//- p id : #{user.id}
-//- p Username : #{user.name}
-//- p name : #{user.displayName}
-//- if user.email
-  //- p email : #{user.emails[0].value}
 p Halaman Dashboard #{user.provider}
-if user.provider === "facebook"
-  p Display Name Facebook : #{user.displayName}
-  p #{user.name}
-else if user.provider === "twitter"
-  p Display Name Twitter : #{user.displayName}
-  p #{user.name}
+
+a(href="#{user.photo}" target="_blank")
+  img(src="#{user.photo}" style="width: 100px")
+p Display Name #{user.provider} : #{user.displayName}
+p #{user.provider} Name : #{user.name}
+p username #{user.provider} : @#{user.username}
+if user.provider != "twitter"
+  p email #{user.provider} : #{user.email}
+
 a(href="/Logout") Log Out

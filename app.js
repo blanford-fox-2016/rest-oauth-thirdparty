@@ -18,11 +18,13 @@ const passport = require('passport');
 const LocalStrategy   = require('passport-local').Strategy;
 const facebook = require('passport-facebook').Strategy;
 const twitter = require('passport-twitter').Strategy;
+const google = require('passport-google-oauth').OAuth2Strategy;
 
 // require mongoose
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/oauth');
+
 // model from schema
 let User = require('./models/user');
 
@@ -75,9 +77,19 @@ passport.use(new facebook({
 function(req, accessToken, refreshToken, profile, done) {
   console.log('ini profile: ' );
   console.log(profile);
-  User.create({
+  // console.log(profile.photos[0].value.split('/').slice(2, profile.photos[0].value.length).join('/'));
+  User.findOneAndUpdate(
+    {
+      username: profile.displayName.toLowerCase().replace(/\s+/g, '')
+    },
+    {
     name: profile.displayName,
+    username: profile.displayName.toLowerCase().replace(/\s+/g, ''),
+    photo: profile.photos[0].value,
+    email : profile.emails[0].value,
     provider: profile.provider
+  }, {
+    upsert: true
   }).then((err, user) => {
     if(err) console.log(err)
     return done(null, profile);
@@ -103,9 +115,16 @@ passport.use(new twitter({
 },
 function(accessToken, refreshToken, profile, done) {
   console.log(profile);
-  User.create({
+  User.findOneAndUpdate({
+    username: profile.username
+  },
+    {
     name: profile.displayName,
+    username: profile.username,
+    photo : profile.photos[0].value,
     provider: profile.provider
+  }, {
+    upsert: true
   }).then((err, user) => {
     if(err) console.log(err)
     return done(null, profile);
@@ -119,6 +138,43 @@ passport.serializeUser(function(user, cb) {
 passport.deserializeUser(function(obj, cb) {
   cb(null, obj);
 });
+
+// -----------------------------------------------------
+// google confifguration
+// -----------------------------------------------------
+
+passport.use(new google({
+  clientID: config.google.clientID,
+  clientSecret: config.google.clientSecret,
+  callbackURL: config.google.callbackURL
+},
+function(accessToken, refreshToken, profile, done) {
+  console.log(profile);
+  User.findOneAndUpdate({
+    username: profile.displayName.toLowerCase().replace(/\s+/g, '')
+  },{
+    name: profile.displayName,
+    username: profile.displayName.toLowerCase().replace(/\s+/g, ''),
+    photo: profile.photos[0].value,
+    email: profile.emails[0].value,
+    provider: profile.provider
+  },{
+    upsert: true
+  }).then((err, user) => {
+    if(err) console.log(err)
+    return done(null, profile);
+  })
+}));
+
+passport.serializeUser(function(user, cb) {
+  cb(null, user);
+});
+
+passport.deserializeUser(function(obj, cb) {
+  cb(null, obj);
+});
+
+
 
 // -----------------------------------------------------
 // routes config
