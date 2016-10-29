@@ -24,5 +24,9 @@ routesAuth.get('/facebook/callback',
   })
 );
 
+routesAuth.get('/twitter/callback',
+  passport.authenticate('twitter', { failureRedirect: '/login' }),
+  controller.processLogin);
+
 
 module.exports = routesAuth

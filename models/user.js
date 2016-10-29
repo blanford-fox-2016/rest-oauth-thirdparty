@@ -14,7 +14,8 @@ let User = new Schema({
   photo       : {
     type      : String,
     trim      : true
-  }
+  },
+  provider    : String
 });
 
 User.plugin(passportLocalMongoose)

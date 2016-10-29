@@ -14,7 +14,7 @@ const routesDashboard = express.Router()
 // controllers
 const controller = require('../controllers/dashboardController')
 
-routesDashboard.get('/', controller.viewDashboard)
+routesDashboard.get('/', require('connect-ensure-login').ensureLoggedIn(), controller.viewDashboard)
 
 
 module.exports = routesDashboard

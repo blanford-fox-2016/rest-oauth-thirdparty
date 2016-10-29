@@ -18,6 +18,8 @@ routesLogin.get('/', controller.viewLogin);
 
 routesLogin.get('/facebook', passport.authenticate('facebook'));
 
+routesLogin.get('/twitter', passport.authenticate('twitter'));
+
 // routesLogin.post('/login', passport.authenticate('local', {failureRedirect: '/login'}), controller.processLogin)
 
 routesLogin.post('/', controller.processLogin)

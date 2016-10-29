@@ -3,11 +3,11 @@
 //- p name : #{user.displayName}
 //- if user.email
   //- p email : #{user.emails[0].value}
-p Halaman Dashboard
-if userFacebook
-  img(src="#{userFacebook._json.picture.data.url}" style="height: 50px")
-  p Display Name Facebook : #{userFacebook.displayName}
-  p #{userFacebook._json.name}
-  p Link url :
-    a(href="#{userFacebook._json.picture.data.url}" target="_blank") #{userFacebook._json.picture.data.url}
+p Halaman Dashboard #{user.provider}
+if user.provider === "facebook"
+  p Display Name Facebook : #{user.displayName}
+  p #{user.name}
+else if user.provider === "twitter"
+  p Display Name Twitter : #{user.displayName}
+  p #{user.name}
 a(href="/Logout") Log Out

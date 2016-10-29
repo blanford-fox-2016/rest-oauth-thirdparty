@@ -23,7 +23,8 @@ const twitter = require('passport-twitter').Strategy;
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/oauth');
-let User = require('./models/user'); // model from schema
+// model from schema
+let User = require('./models/user');
 
 // -----------------------------------------------------------
 // routes
@@ -64,16 +65,6 @@ app.use(passport.session())
 
 passport.use(new LocalStrategy(User.authenticate()));
 
-/*
-passport.use(new FacebookStrategy({
-    clientID: process.env.FACEBOOK_APP_ID,
-    clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: process.env.FACEBOOK_CALLBACK,
-    profileFields: ['id', 'displayName', 'photos', 'email'],
-    passReqToCallback: true
-  }, function (req, accessToken, refreshToken, profile, done)
-*/
-
 passport.use(new facebook({
   clientID: config.facebook.clientID,
   clientSecret: config.facebook.clientSecret,
@@ -82,12 +73,15 @@ passport.use(new facebook({
   passReqToCallback: true
 },
 function(req, accessToken, refreshToken, profile, done) {
-  // console.log(profile);
+  console.log('ini profile: ' );
+  console.log(profile);
   User.create({
-    name: profile.displayName
+    name: profile.displayName,
+    provider: profile.provider
+  }).then((err, user) => {
+    if(err) console.log(err)
+    return done(null, profile);
   })
-
-  return done(null, profile);
 }));
 
 passport.serializeUser(function(user, cb) {
@@ -107,8 +101,15 @@ passport.use(new twitter({
   consumerSecret: config.twitter.consumerSecret,
   callbackURL: config.twitter.callbackURL
 },
-function(accessToken, refreshToken, profile, cb) {
-  return cb(null, profile);
+function(accessToken, refreshToken, profile, done) {
+  console.log(profile);
+  User.create({
+    name: profile.displayName,
+    provider: profile.provider
+  }).then((err, user) => {
+    if(err) console.log(err)
+    return done(null, profile);
+  })
 }));
 
 passport.serializeUser(function(user, cb) {
