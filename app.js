@@ -33,27 +33,9 @@ const routesLogin = require('./routes/login');
 const routesLogout = require('./routes/logout');
 const routesDashboard = require('./routes/dashboard');
 
-// const providers = require('./helpers/providers');
-
-
 // set the port
 let port = process.env.PORT || 3000;
 
-passport.use(new LocalStrategy(User.authenticate()));
-
-passport.use(new facebook({
-    clientID: "259582084439610",
-    clientSecret: "414d2bbc0df52ba0c52846223c6ede46",
-    callbackURL: 'http://localhost:3000/auth/facebook/callback'
-  },
-  function(accessToken, refreshToken, profile, cb) {
-    console.log(profile);
-    User.create({
-      name: profile.displayName
-    })
-
-    return cb(null, profile);
-  }));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -73,6 +55,27 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
+
+// -----------------------------------------------------
+// facebook confifguration
+// -----------------------------------------------------
+
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.use(new facebook({
+  clientID: "259582084439610",
+  clientSecret: "414d2bbc0df52ba0c52846223c6ede46",
+  callbackURL: 'http://localhost:3000/auth/facebook/callback'
+},
+function(accessToken, refreshToken, profile, cb) {
+  console.log(profile);
+  User.create({
+    name: profile.displayName
+  })
+
+  return cb(null, profile);
+}));
+
 passport.serializeUser(function(user, cb) {
   cb(null, user);
 });
@@ -80,6 +83,10 @@ passport.serializeUser(function(user, cb) {
 passport.deserializeUser(function(obj, cb) {
   cb(null, obj);
 });
+
+// -----------------------------------------------------
+// twitter confifguration
+// -----------------------------------------------------
 
 passport.use(new twitter({
     consumerKey: "R2dWdhEjaUxtZq0znY52G1Hcb",
@@ -109,17 +116,6 @@ app.use('/login', routesLogin)
 app.use('/logout', routesLogout)
 app.use('/dashboard', routesDashboard)
 
-
-
-////////////////////////////////////////////
-// Define routes facebook
-
-app.get('/auth/facebook/callback',
-  passport.authenticate('facebook', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/login'
-  })
-);
 
 app.listen(port, () => {
   console.log('the server is running on port ', port);

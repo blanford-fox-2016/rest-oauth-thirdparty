@@ -12,12 +12,12 @@ const routesAuth = express.Router()
 // controllers
 const controller = require('../controllers/loginController')
 
-// routesAuth.get('/facebook/callback',
-//   passport.authenticate('facebook', {
-//     successRedirect: '/dashboard',
-//     failureRedirect: '/login'
-//   })
-// );
+routesAuth.get('/facebook/callback',
+  passport.authenticate('facebook', {
+    successRedirect: '/dashboard',
+    failureRedirect: '/login'
+  })
+);
 
 
 module.exports = routesAuth
