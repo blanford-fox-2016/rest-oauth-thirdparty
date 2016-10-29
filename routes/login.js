@@ -14,10 +14,13 @@ const routesLogin = express.Router()
 // controllers
 const controller = require('../controllers/loginController')
 
-routesLogin.get('/', controller.viewLogin);
+// middleware
+const middleware = require('../helper/middleware')
+
+routesLogin.get('/', middleware.checkLogin, controller.viewLogin);
 
 // routesLogin.post('/login', passport.authenticate('local', {failureRedirect: '/login'}), controller.processLogin)
 
-routesLogin.post('/', controller.processLogin)
+routesLogin.post('/', passport.authenticate('local'), controller.processLogin)
 
 module.exports = routesLogin
