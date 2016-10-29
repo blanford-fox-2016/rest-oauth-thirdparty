@@ -4,13 +4,17 @@
 // ---------------------------------------------------------------------
 const express = require('express')
 
+// passport
+const passport = require('passport');
+
 // Initiate Express
 const app = express()
-const routesIndex = express.Router()
+const routesDashboard = express.Router()
 
 // controllers
-const controller = require('../controllers/indexController')
+const controller = require('../controllers/dashboardController')
 
-routesIndex.get('/', controller.viewIndex);
+routesDashboard.get('/', controller.viewDashboard)
 
-module.exports = routesIndex
+
+module.exports = routesDashboard

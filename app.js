@@ -7,6 +7,9 @@ const logger = require('morgan');
 const session = require('express-session');
 var path = require('path');
 
+// instance the express via app
+let app = express();
+
 // Auth
 const passport = require('passport');
 const LocalStrategy   = require('passport-local').Strategy;
@@ -19,11 +22,18 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/oauth');
 let User = require('./models/user'); // model from schema
 
+// -----------------------------------------------------------
 // routes
+// -----------------------------------------------------------
 const auth = require('./routes/auth');
-const routes = require('./routes/index');
+const routesIndex = require('./routes/index');
+const routesAuth= require('./routes/auth');
+const routesSignup = require('./routes/signup');
+const routesLogin = require('./routes/login');
+const routesLogout = require('./routes/logout');
+const routesDashboard = require('./routes/dashboard');
+
 // const providers = require('./helpers/providers');
-let controller = require('./controllers/userController')
 
 
 // set the port
@@ -45,10 +55,6 @@ passport.use(new facebook({
     return cb(null, profile);
   }));
 
-
-// instance the express via app
-let app = express();
-
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
@@ -64,9 +70,8 @@ app.use(session({
   }
 }))
 
-
-// passport.use(new LocalStrategy(User.authenticate()));
-
+app.use(passport.initialize())
+app.use(passport.session())
 
 passport.serializeUser(function(user, cb) {
   cb(null, user);
@@ -75,7 +80,6 @@ passport.serializeUser(function(user, cb) {
 passport.deserializeUser(function(obj, cb) {
   cb(null, obj);
 });
-
 
 passport.use(new twitter({
     consumerKey: "R2dWdhEjaUxtZq0znY52G1Hcb",
@@ -94,26 +98,21 @@ passport.deserializeUser(function(obj, cb) {
   cb(null, obj);
 });
 
+// -----------------------------------------------------
+// routes config
+// -----------------------------------------------------
+app.use(logger('dev'));
+app.use('/', routesIndex)
+app.use('/signup', routesSignup)
+app.use('/auth', routesAuth)
+app.use('/login', routesLogin)
+app.use('/logout', routesLogout)
+app.use('/dashboard', routesDashboard)
 
 
-app.use(passport.initialize())
-app.use(passport.session())
 
-
-//////////////////
-// Define routes.
-app.get('/',
-  function(req, res) {
-    res.render('home', { user: req.user });
-  });
-
-app.get('/login',
-  function(req, res){
-    res.render('login');
-  });
-
-app.get('/login/facebook',
-  passport.authenticate('facebook'));
+////////////////////////////////////////////
+// Define routes facebook
 
 app.get('/auth/facebook/callback',
   passport.authenticate('facebook', {
@@ -121,35 +120,6 @@ app.get('/auth/facebook/callback',
     failureRedirect: '/login'
   })
 );
-
-app.get('/profile',
-  require('connect-ensure-login').ensureLoggedIn(),
-  function(req, res){
-    res.render('profile', { user: req.user });
-  });
-
-///////////////
-
-
-
-app.get('/', (req, res) => {
-  res.send('Hello World')
-})
-
-app.post('/login', passport.authenticate('local', {failureRedirect: '/login'}), (req, res) => {
-  res.redirect('/dashboard')
-})
-
-// show sign up form
-app.get('/signup', controller.formSignUp)
-
-// process sign up / insert data into database
-app.post('/signup/add', controller.processSignUp)
-
-app.get('/dashboard', (req, res, next) => {
-  res.send('asdfasdfsf')
-})
-
 
 app.listen(port, () => {
   console.log('the server is running on port ', port);

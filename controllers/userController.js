@@ -8,6 +8,7 @@ let formSignUp = (req, res, next) => {
 
 let processSignUp = (req, res, next) => {
   //console.log(req.body);
+  console.log(`aaa`);
   User.register(new User({
     name        : req.body.name,
     username    : req.body.username,
@@ -17,7 +18,7 @@ let processSignUp = (req, res, next) => {
   }), req.body.password, (err) => {
     if (err) {
       console.log(err);
-      return res.render('login')
+      return res.redirect('/signup')
     } else {
       passport.authenticate('local')(req, res, () => {
         req.session.save((err) => {
@@ -42,8 +43,6 @@ let facebookLogin = (req, res, next) => {
 // facebook
 
 // google
-
-
 
 
 module.exports = {
