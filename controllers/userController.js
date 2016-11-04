@@ -14,7 +14,8 @@ let processSignUp = (req, res, next) => {
     username    : req.body.username,
     password    : req.body.password,
     email       : req.body.email,
-    photo       : req.body.photo || false
+    photo       : req.body.photo || false,
+    provider    : "local"
   }), req.body.password, (err) => {
     if (err) {
       console.log(err);
