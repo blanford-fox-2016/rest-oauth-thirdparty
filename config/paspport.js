@@ -21,7 +21,10 @@ module.exports = (passport) => {
       });
     });
 
-  //local login
+//==========================
+//local login
+//=========================
+
   passport.use('local-login',new LocalStrategy({
     usernameField : 'email',
     passwordField : 'password',
@@ -30,7 +33,6 @@ module.exports = (passport) => {
     (req, email, password, done) => {
       if (email)
           email = email.toLowerCase(); //lowercase to emailsensitive
-
       // asynchronous
       process.nextTick(() => {
           User.findOne({ 'local.email' :  email }, (err, user) => {
@@ -49,7 +51,11 @@ module.exports = (passport) => {
             });
         });
     }));
-    //local signup
+
+//=======================
+//local signup
+//===========================
+
     passport.use('local-signup', new LocalStrategy({
       usernameField : 'email',
       passwordField : 'password',
@@ -115,8 +121,9 @@ module.exports = (passport) => {
 
         })
     }))
-
-    //facebookAuth
+//===================
+//facebookAuth
+//====================
     passport.use(new FacebookStrategy({
       clientID        : configAuth.facebookAuth.clientID, // your App ID
       clientSecret    : configAuth.facebookAuth.clientSecret, // your App Secret
